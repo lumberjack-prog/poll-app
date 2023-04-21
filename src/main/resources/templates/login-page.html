@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="eng">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+<!--    <link rel="stylesheet" href="../static/css/style.css">-->
+    <script type="text/javascript" th:src="@{/js/index.js}"></script>
+</head>
+<!--Wrong user or password-->
+<body>
+    <div  class="login-main">
+            <h3>Sign In!</h3>
+            <div th:if="${param.error}">
+                <p class="error">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+            </div>
+            <form th:action="@{/login}" method="post" class="login-form">
+                <label for="femail"></label><input type="email" name="email" id="femail" class="login-input" placeholder="Email" required autofocus>
+                <label for="fpassword"></label><input type="password" name="password" id="fpassword" class="login-input" placeholder="Password" required>
+                <input type="submit" value="Login" class="btn">
+            </form>
+    </div>
+</body>
+
+</html>

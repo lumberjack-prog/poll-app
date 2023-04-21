@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      lang="eng">
+<head>
+    <meta charset="UTF-8">
+    <title>Poll</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script type="text/javascript" th:src="@{/js/index.js}"></script>
+</head>
+
+<body>
+<div class="main">
+    <div sec:authorize="isAuthenticated()" class="header-auth">
+        <p>Welcome, </p>
+        <p sec:authentication="name"></p>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Log Out" class="btn">
+        </form>
+    </div>
+    <div sec:authorize="!isAuthenticated()" class="header-auth">
+        <p>Welcome!</p>
+        <a th:href="@{/login}" class="btn">Sign In</a>
+    </div>
+    <div th:if="${!userVoted}" class="poll-container">
+        <h3>What programming language do you use during the coding interview?</h3>
+        <form class="poll-form" th:action="@{/poll}" th:object="${option}" method="post">
+            <div th:each="option : ${allOptions}">
+                <label class="checkbox-container">
+                    <p th:text="${option.optionName}"/>
+                    <input name="option" type="checkbox"
+                           th:value="${option.getOptionName()}"
+                           id="option[[${optionIndex.index}]]"
+                           onclick="checkedOnClick(this)"
+                           class="checkbox-js"/>
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            <div class="poll-bottom">
+                <div class="poll-stats">
+                    <p class="p-gray">Total Votes: 25</p>
+                    <span class="dot">·</span>
+                    <p class="p-gray">5 Days Left</p>
+                </div>
+                <div class="vote-btn">
+                    <input class="btn" type="submit" value="Vote">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="poll-container">
+        <h3>What programming language do you use during the coding interview?</h3>
+        <div th:each="option : ${allOptions}">
+            <div class="poll-results-stats">
+                <p class="poll-results-stats-left" th:text="${option.percentage + '%'}">%</p>
+                <div class="poll-results-stats-right">
+                    <p th:text="${option.optionName}"/>
+                    <div class="percent-bar-background">
+                        <div th:data-value="${option.percentage}" class="percent-bar percentage-data-bar-js"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="poll-stats">
+            <p class="p-gray">Total Votes: </p><span class="p-gray" th:text="${allPolls.size()}"></span>
+            <span class="dot">·</span>
+            <p class="p-gray">5 Days Left</p>
+        </div>
+    </div>
+
+    <div  sec:authorize="isAuthenticated()" class="poll-container">
+        <table>
+            <tr>
+                <th>User</th>
+                <th>Language</th>
+                <th>Date</th>
+            </tr>
+            <tr th:each="poll : ${allPolls}">
+                <td th:text="${poll.userEmail}"/>
+                <td th:text="${poll.getOptionSelected().optionName}"/>
+                <td th:text="${poll.timeStamp}"/>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
